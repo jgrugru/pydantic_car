@@ -1,4 +1,4 @@
-from email.policy import default
+from typing import Callable, Generator, Dict, Any
 from pydantic import (
     Field,
     BaseModel,
@@ -18,20 +18,20 @@ class Percent(float):
     """
 
     @classmethod
-    def __get_validators__(cls):
+    def __get_validators__(cls) -> Generator[Callable[[float], float], None, None]:
         # one or more validators may be yielded which will be called in the
         # order to validate the input, each validator will receive as an input
         # the value returned from the previous validator
         yield cls.validate
 
     @classmethod
-    def __modify_schema__(cls, field_schema):
+    def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
         # __modify_schema__ should mutate the dict it receives in place,
         # the returned value will be ignored
         field_schema.update(pattern="0.0 <= x <= 1.00", type="float")
 
     @classmethod
-    def validate(cls, v):
+    def validate(cls, v: float) -> float:
         if not isinstance(v, float):
             raise TypeError("float required")
         if not 0 <= v <= 1:
@@ -40,15 +40,16 @@ class Percent(float):
             )
         return v
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Percent({super().__repr__()})"
 
 
 class GasTank(BaseModel):
     """The below commented out code shows how to make a percentage type
-    that is used to represent the fullness of the tank.
+    that is used to represent the current level of the tank.
     There are 3 possible ways to do this in pydantic:
-    - create your own class with validate and update_schema function
+    - create your own class with validate and update_schema function.
+      Class is created above.
     - use con (constrain) pydantic types
     - create own validator function using validator decorator"""
 
@@ -65,7 +66,7 @@ class GasTank(BaseModel):
     # Percent is it's own class and has it's own validate function.
     # Advantage of this is that it is reusable elsewhere as well as ability to
     # modify the schema, more control.
-    # fill: Percent
+    fill: Percent
 
     # Probably the worst choice in this case. Extra overhead and the
     # the code is not reuseable/modular. Limits transferability of model.
@@ -80,5 +81,5 @@ class GasTank(BaseModel):
         validate_arguments = True
 
 
-# x = GasTank(capacity=15, fill=0.1)
-# print(x)
+x = GasTank(capacity=15, fill=0.1)
+print(x)
