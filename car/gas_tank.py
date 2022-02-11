@@ -55,19 +55,23 @@ class GasTank(BaseModel):
 
     capacity: int = Field(le=35, gt=0)
 
+    # Confloat:
     # Very simple method to define percent. Down side it is not
     # reusable. Will have to define in multiple places.
-    # fill: condecimal(ge=0.0, le=1.0, decimal_places=2)
+    # fill: confloat(ge=0.0, le=1.0)
 
+    # Condecimal:
     # A variant of the above version but with more constraints:
     # Now limits on the decimal places
-    # fill: ConstrainedDecimal = Field(ge=0, le=1, decimal_places=2)
+    # fill: condecimal(ge=0.0, le=1.0, decimal_places=2)
 
+    # class Percent:
     # Percent is it's own class and has it's own validate function.
     # Advantage of this is that it is reusable elsewhere as well as ability to
     # modify the schema, more control.
     fill: Percent
 
+    # Validator:
     # Probably the worst choice in this case. Extra overhead and the
     # the code is not reuseable/modular. Limits transferability of model.
     # fill: StrictFloat = Field(default=1.0)
@@ -81,5 +85,5 @@ class GasTank(BaseModel):
         validate_arguments = True
 
 
-x = GasTank(capacity=15, fill=0.1)
-print(x)
+# x = GasTank(capacity=15, fill=0.1)
+# print(x.schema_json())
