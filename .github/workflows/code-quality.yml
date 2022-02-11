@@ -14,7 +14,7 @@ jobs:
       with:
         python-version: 3.8
     - run: pip install --upgrade pip
-    - run: pip install black==21.6b0 mypy==v0.931
-    - run: pip install -r requirements.txt
+    - run: pip install black==21.6b0 mypy==v0.931 poetry
+    - run: poetry install
     - run: black --diff --check $(git ls-files '*.py')
     - run: mypy --strict $(git ls-files '*.py')
