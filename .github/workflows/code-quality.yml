@@ -17,4 +17,4 @@ jobs:
     - run: pip install black==21.6b0 mypy==v0.931 poetry
     - run: poetry install
     - run: black --diff --check $(git ls-files '*.py')
-    - run: mypy --strict $(git ls-files '*.py') --install-types
+    - run: mypy --strict $(git ls-files '*.py') --install-types --non-interactive
